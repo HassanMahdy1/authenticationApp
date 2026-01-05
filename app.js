@@ -17,7 +17,7 @@ app.use(morgan('dev'));
 // 1. CORS - التحكم في الوصول للمصادر (أساسي لأي API)
 app.use(
   cors({
-    origin: process.env.CLIENT_URL || "*", //يتم مسح النجمه في حاله رفع البروداكشن
+    origin: process.env.CLIENT_URL , //يتم مسح النجمه في حاله رفع البروداكشن
     credentials: true,
     
   })
@@ -31,7 +31,7 @@ app.use(
 );
 
 // 3. Logging
-if (process.env.NODE_ENV === "development") {
+if (process.env.NODE_ENV ) {
   app.use(morgan("dev"));
 }
 

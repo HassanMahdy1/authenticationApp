@@ -48,7 +48,7 @@ const userSchema = new mongoose.Schema(
       default: true,
       select: false,
     },
-    refreshToken: String,
+    refreshToken: { type: String, select: false },
   },
   {
     timestamps: true,
@@ -68,7 +68,6 @@ userSchema.pre("save", async function () {
   this.passwordConfirm = undefined;
 });
 
-// 2) تحديث تاريخ التغيير: لا حاجة لـ next() طالما لا توجد عمليات async معقدة
 userSchema.pre("save", function () {
   if (!this.isModified("password") || this.isNew) return;
 
@@ -111,6 +110,16 @@ userSchema.methods.createPasswordResetToken = function () {
   this.passwordResetExpires = Date.now() + 10 * 60 * 1000;
 
   return resetToken;
+};
+
+
+
+// ميثود للتحقق من صحة الـ Refresh Token عند التجديد
+userSchema.methods.correctRefreshToken = async function (
+  candidateToken,
+  hashedToken
+) {
+  return await bcrypt.compare(candidateToken, hashedToken);
 };
 
 const User = mongoose.model("User", userSchema);

@@ -2,11 +2,14 @@ import User from "../models/userModel.js";
 import AppError from "../utils/appError.js";
 import { accessToken, refreshToken } from "../utils/jwt.js";
 import jwt from "jsonwebtoken";
+import { promisify } from "util";
+import bcrypt from "bcryptjs";
 
 const createSendToken = async (user, statusCode, res) => {
   const refresh = refreshToken(user._id);
-  user.refreshToken = refresh;
-  await user.save({ validateBeforeSave: false });
+  const access = accessToken(user._id);
+  const hashedRefresh = await bcrypt.hash(refresh, 10);
+  await User.findByIdAndUpdate(user._id, { refreshToken: hashedRefresh });
   res.cookie("refreshToken", refresh, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
@@ -16,9 +19,10 @@ const createSendToken = async (user, statusCode, res) => {
     ),
   });
   user.password = undefined;
+  user.refreshToken = undefined;
   res.status(statusCode).json({
     status: "success",
-    token: accessToken(user._id),
+    accessToken: access,
     data: {
       user,
     },
@@ -53,42 +57,68 @@ export const login = async (req, res, next) => {
   createSendToken(user, 200, res);
 };
 
-export const refresh = (req, res, next) => {
-  const cookies = req.cookies;
-  if (!cookies?.refreshToken) return next(new AppError("UnAuthorized", 401));
-  const refreshToken = cookies.refreshToken;
-  jwt.verify(
-    refreshToken,
-    process.env.REFRESH_TOKEN_SECRET,
-    async (err, decoded) => {
-      if (err) return next(new AppError("forbidden token", 403));
-      const foundUser = await User.findById(decoded.currentUser.id).exec();
-      if (!foundUser) return next(new AppError("UnAuthorized", 401));
-      if (foundUser.refreshToken !== refreshToken)
-        return next(new AppError("Invalid refresh token", 403));
+export const refresh = async (req, res, next) => {
+  // 1) التأكد من وجود الكوكي
+  const refreshToken = req.cookies?.refreshToken;
+  if (!refreshToken) return next(new AppError("UnAuthorized", 401));
 
-      const token = accessToken(foundUser._id);
-      res.json({ token });
-    }
+  // 2) التحقق من صحة التوكن (بأسلوب الـ Promises الحديث)
+  let decoded;
+  try {
+    decoded = await promisify(jwt.verify)(
+      refreshToken,
+      process.env.REFRESH_TOKEN_SECRET
+    );
+  } catch (err) {
+    return next(new AppError("Forbidden: Invalid or expired token", 403));
+  }
+
+  // 3) البحث عن المستخدم وجلب التوكن المشفر (select: +refreshToken)
+  const foundUser = await User.findById(decoded.currentUser.id).select(
+    "+refreshToken"
   );
+  if (!foundUser)
+    return next(new AppError("UnAuthorized: User not found", 401));
+
+  const isMatch = await foundUser.correctRefreshToken(
+    refreshToken,
+    foundUser.refreshToken
+  );
+
+  if (!isMatch) {
+    return next(new AppError("Invalid refresh token: Access Denied", 403));
+  }
+
+  const token = accessToken(foundUser._id);
+
+  res.status(200).json({
+    status: "success",
+    accessToken: token,
+  });
 };
 
 export const logout = async (req, res) => {
-  const cookies = req.cookies;
-  if (cookies?.refreshToken) {
-    const user = await User.findOne({ refreshToken: cookies.refreshToken });
-    if (user) {
-      user.refreshToken = null;
-      await user.save({ validateBeforeSave: false });
+  const refreshToken = req.cookies?.refreshToken;
+  if (refreshToken) {
+    try {
+      const decoded = await promisify(jwt.verify)(
+        refreshToken,
+        process.env.REFRESH_TOKEN_SECRET
+      );
+      console.log(decoded);
+      await User.findByIdAndUpdate(decoded.currentUser.id, {
+        refreshToken: null,
+      });
+    } catch {
+      console.log("Logout cleanup: Token already invalid or expired");
     }
   }
 
   res.clearCookie("refreshToken", {
     httpOnly: true,
     sameSite: "strict",
-    secure: true,
+    secure: process.env.NODE_ENV === "production",
   });
 
-  res.status(200).json({ message: "Logged out" });
+  res.status(200).json({ status: "success", message: "Logged out" });
 };
-

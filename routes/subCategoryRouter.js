@@ -6,14 +6,16 @@ import {
   updateSubCategory,
   deleteSubCategory,
 } from "../controllers/subCategoryController.js";
+import {restrictTo,verfyJWT} from "../middlewares/protect.js";
 
 const router = express.Router();
 
-router.route("/").get(getAllSubCategory).post(createSubCategory);
-router
-  .route("/:id")
-  .get(getSubCategory)
-  .patch(updateSubCategory)
-  .delete(deleteSubCategory);
+router.route("/").get(getAllSubCategory);
+router.route("/:id").get(getSubCategory);
+
+ router.use(verfyJWT,restrictTo("guide", "lead-guide", "admin"))
+
+router.route("/").post(createSubCategory);
+router.route("/:id").patch(updateSubCategory).delete(deleteSubCategory);
 
 export default router;

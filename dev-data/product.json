@@ -1,0 +1,41 @@
+[
+  { "name": "Smartphone", "price": 499, "stock": 50, "images": [], "categories": 1 },
+  { "name": "Laptop", "price": 899, "stock": 30, "images": [], "categories": 1 },
+  { "name": "Headphones", "price": 199, "stock": 70, "images": [], "categories": 1 },
+  
+  { "name": "T-Shirt", "price": 19, "stock": 100, "images": [], "categories": 2 },
+  { "name": "Jeans", "price": 49, "stock": 60, "images": [], "categories": 2 },
+  { "name": "Jacket", "price": 99, "stock": 40, "images": [], "categories": 2 },
+  
+  { "name": "Node.js Book", "price": 29, "stock": 80, "images": [], "categories": 3 },
+  { "name": "JavaScript Book", "price": 35, "stock": 70, "images": [], "categories": 3 },
+  { "name": "CSS Book", "price": 25, "stock": 90, "images": [], "categories": 3 },
+  
+  { "name": "Blender", "price": 120, "stock": 25, "images": [], "categories": 4 },
+  { "name": "Coffee Maker", "price": 80, "stock": 35, "images": [], "categories": 4 },
+  { "name": "Vacuum Cleaner", "price": 150, "stock": 20, "images": [], "categories": 4 },
+  
+  { "name": "Football", "price": 25, "stock": 50, "images": [], "categories": 5 },
+  { "name": "Tennis Racket", "price": 70, "stock": 30, "images": [], "categories": 5 },
+  { "name": "Yoga Mat", "price": 20, "stock": 100, "images": [], "categories": 5 },
+  
+  { "name": "Lipstick", "price": 15, "stock": 60, "images": [], "categories": 6 },
+  { "name": "Perfume", "price": 45, "stock": 40, "images": [], "categories": 6 },
+  { "name": "Moisturizer", "price": 25, "stock": 50, "images": [], "categories": 6 },
+  
+  { "name": "Toy Car", "price": 10, "stock": 80, "images": [], "categories": 7 },
+  { "name": "Doll", "price": 15, "stock": 60, "images": [], "categories": 7 },
+  { "name": "Puzzle", "price": 12, "stock": 70, "images": [], "categories": 7 },
+  
+  { "name": "Car Vacuum", "price": 30, "stock": 25, "images": [], "categories": 8 },
+  { "name": "Engine Oil", "price": 40, "stock": 50, "images": [], "categories": 8 },
+  { "name": "Car Charger", "price": 20, "stock": 80, "images": [], "categories": 8 },
+  
+  { "name": "Garden Shovel", "price": 15, "stock": 30, "images": [], "categories": 9 },
+  { "name": "Hose", "price": 25, "stock": 20, "images": [], "categories": 9 },
+  { "name": "Plant Seeds", "price": 5, "stock": 100, "images": [], "categories": 9 },
+  
+  { "name": "Guitar", "price": 150, "stock": 10, "images": [], "categories": 10 },
+  { "name": "Piano Keyboard", "price": 300, "stock": 5, "images": [], "categories": 10 },
+  { "name": "Drum Set", "price": 200, "stock": 2, "images": [], "categories": 10 }
+]

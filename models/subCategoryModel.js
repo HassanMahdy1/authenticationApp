@@ -7,7 +7,7 @@ const subCategorySchema = new mongoose.Schema(
       type: String,
       required: true,
       trim: true,
-      unique:[true,"the name must be unique"]
+      unique: [true, "the name must be unique"],
     },
     slug: {
       type: String,
@@ -21,6 +21,11 @@ const subCategorySchema = new mongoose.Schema(
     isActive: {
       type: Boolean,
       default: true,
+    },
+    createdBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
     },
   },
   {

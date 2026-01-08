@@ -1,7 +1,6 @@
 import mongoose from "mongoose";
 import slugify from "slugify";
 
-
 const productSchema = new mongoose.Schema(
   {
     name: {
@@ -64,6 +63,11 @@ const productSchema = new mongoose.Schema(
     brand: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Brand",
+    },
+    createdBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
     },
   },
   {

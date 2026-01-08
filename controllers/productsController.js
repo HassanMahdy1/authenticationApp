@@ -18,6 +18,8 @@ export const createProduct = createOne(Product, [
   "size",
   "discount",
   "isAvailable",
+  "subCategory",
+  "category"
 ]);
 
 export const getProduct = getOne(Product, {

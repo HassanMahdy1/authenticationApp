@@ -6,14 +6,14 @@ import {
   updateProduct,
   deleteProduct,
 } from "../controllers/productsController.js";
-import { restrictTo, verfyJWT } from "../middlewares/protect.js";
+import { restrictTo, verifyJWT } from "../middlewares/protect.js";
 
 const router = express.Router();
 
 router.route("/").get(getAllProduct);
 router.route("/:id").get(getProduct);
 
- router.use(verfyJWT,restrictTo("guide", "lead-guide", "admin"))
+router.use(verifyJWT, restrictTo("guide", "lead-guide", "admin"));
 
 router.route("/").post(createProduct);
 router.route("/:id").patch(updateProduct).delete(deleteProduct);

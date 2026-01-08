@@ -6,14 +6,14 @@ import {
   updateBrand,
   deleteBrand,
 } from "../controllers/brandController.js";
-import { restrictTo, verfyJWT } from "../middlewares/protect.js";
+import { restrictTo, verifyJWT } from "../middlewares/protect.js";
 
 const router = express.Router();
 
 router.route("/").get(getAllBrand);
 router.route("/:id").get(getBrand);
 
-router.use(verfyJWT, restrictTo("guide", "lead-guide", "admin"));
+router.use(verifyJWT, restrictTo("guide", "lead-guide", "admin"));
 
 router.route("/").post(createBrand);
 router.route("/:id").patch(updateBrand).delete(deleteBrand);

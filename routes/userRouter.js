@@ -5,10 +5,10 @@ import {
   updateUser,
   deleteUser,
 } from "../controllers/userController.js";
-import {restrictTo,verfyJWT} from "../middlewares/protect.js";
+import {restrictTo, verifyJWT} from "../middlewares/protect.js";
 
 const router = express.Router();
- router.use(verfyJWT,restrictTo("admin"))
+ router.use(verifyJWT, restrictTo("admin"))
 
 router.route("/").get(getAllUser)
 router

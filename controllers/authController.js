@@ -5,6 +5,7 @@ import jwt from "jsonwebtoken";
 import { promisify } from "util";
 import bcrypt from "bcryptjs";
 
+
 const createSendToken = async (user, statusCode, res, next) => {
   try {
     const refresh = refreshToken(user._id);
@@ -142,3 +143,4 @@ export const logout = async (req, res, next) => {
     return next(new AppError(error.message, 500));
   }
 };
+

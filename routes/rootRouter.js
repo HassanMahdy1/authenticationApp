@@ -24,4 +24,7 @@ router.use("/brand", brandRouter);
 router.use("/subCategory", subCategoryRouter);
 router.use("/user", userRouter);
 router.use("/auth", authRouter);
+
+
+
 export default router;

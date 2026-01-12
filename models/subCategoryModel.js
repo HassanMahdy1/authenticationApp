@@ -16,7 +16,7 @@ const subCategorySchema = new mongoose.Schema(
     category: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Category",
-      required: true,
+      required: [true, "SubCategory must belong to a parent category"],
     },
     isActive: {
       type: Boolean,
@@ -50,5 +50,7 @@ subCategorySchema.virtual("products", {
   localField: "_id",
   foreignField: "subCategory",
 });
+
+subCategorySchema.index({ slug: 1, category: 1 }, { unique: true });
 
 export default mongoose.model("SubCategory", subCategorySchema);

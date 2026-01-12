@@ -9,12 +9,14 @@ import { restrictTo, verifyJWT } from "../middlewares/protect.js";
 import { updatePassword } from "../controllers/currentUserController/updatePassword.js";
 import { updateMe } from "../controllers/currentUserController/updateMe.js";
 import { deleteMe } from "../controllers/currentUserController/deleteMe.js";
+import { getMe } from "../controllers/authController/getMe.js";
 
 const router = express.Router();
 router.use(verifyJWT);
 router.patch("/updatePassword", updatePassword);
 router.patch("/updateMe", updateMe);
 router.delete("/deleteMe", deleteMe);
+router.route("/me").get(getMe,getUser);
 
 router.use(restrictTo("admin"));
 router.route("/").get(getAllUser);

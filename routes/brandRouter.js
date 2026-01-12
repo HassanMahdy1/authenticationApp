@@ -13,7 +13,7 @@ const router = express.Router();
 router.route("/").get(getAllBrand);
 router.route("/:id").get(getBrand);
 
-router.use(verifyJWT, restrictTo("guide", "lead-guide", "admin"));
+router.use(verifyJWT, restrictTo( "admin", "moderator"));
 
 router.route("/").post(createBrand);
 router.route("/:id").patch(updateBrand).delete(deleteBrand);

@@ -13,7 +13,7 @@ const router = express.Router();
 router.route("/").get(getAllCategory);
 router.route("/:id").get(getCategory);
 
-router.use(verifyJWT, restrictTo("guide", "lead-guide", "admin"));
+router.use(verifyJWT, restrictTo( "admin", "moderator"));
 
 router.route("/").post(createCategory);
 router.route("/:id").patch(updateCategory).delete(deleteCategory);

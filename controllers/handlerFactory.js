@@ -58,7 +58,7 @@ export const updateOne = (Model, allowedFields) => async (req, res, next) => {
 export const createOne = (Model, allowedFields) => async (req, res, next) => {
   try {
     const filteredBody = filterObj(req.body, ...allowedFields);
-    if (req.user) filteredBody.createdBy = req.user.id;
+    if (req.user) {filteredBody.createdBy = req.user.id;}
     if (Object.keys(filteredBody).length === 0) {
       return next(new AppError("No valid fields to create", 400));
     }
@@ -78,14 +78,17 @@ export const createOne = (Model, allowedFields) => async (req, res, next) => {
 
 export const getOne = (Model, popOptions) => async (req, res, next) => {
   try {
-    // التحقق من صحة الـ ID
     if (!req.params.id.match(/^[0-9a-fA-F]{24}$/)) {
       return next(new AppError("Invalid ID format", 400));
     }
 
     let query = Model.findById(req.params.id);
-    if (popOptions) query = query.populate(popOptions);
-    const doc = await query;
+
+    if (popOptions) {
+      query = query.populate(popOptions);
+    }
+
+    const doc = await query.exec(); // ← الحل هنا
 
     if (!doc) {
       return next(new AppError("No document found with that ID", 404));
@@ -98,14 +101,17 @@ export const getOne = (Model, popOptions) => async (req, res, next) => {
       },
     });
   } catch (error) {
-    return next(new AppError(error.message, 500));
+    next(new AppError(error.message, 500));
   }
 };
+
+
+
 export const getAll = (Model) => async (req, res, next) => {
   try {
     // دعم فلترة Nested (اختياري)
     let filter = {};
-    if (req.params.categoryId) filter = { category: req.params.categoryId };
+    if (req.params.categoryId) {filter = { category: req.params.categoryId };}
 
     // جلب معايير الصفحة من queryString
     const page = Math.max(1, req.query.page * 1 || 1);

@@ -7,11 +7,11 @@ const productSchema = new mongoose.Schema(
       type: String,
       required: true,
       trim: true,
+      unique: [true, "Product name must be unique"],
     },
     slug: {
       type: String,
       lowercase: true,
-      unique: true,
     },
     price: {
       type: Number,
@@ -24,12 +24,10 @@ const productSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
-    images: [
-      {
-        type: String, // image URLs
-        required: true,
-      },
-    ],
+    images: {
+      type: [String],
+      validate: [(v) => v.length > 0, "Product must have at least one image"],
+    },
     size: {
       type: String,
     },
@@ -40,7 +38,9 @@ const productSchema = new mongoose.Schema(
 
     ratingsAverage: {
       type: Number,
-      default: 0,
+      min: 1,
+      max: 5,
+      default: 4.1,
     },
     ratingsQuantity: {
       type: Number,
@@ -53,12 +53,12 @@ const productSchema = new mongoose.Schema(
     category: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Category",
-      required: true,
+      required: [true, "Product must belong to a category"],
     },
     subCategory: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "SubCategory",
-      required: true,
+      required: [true, "Product must belong to a sub-category"],
     },
     brand: {
       type: mongoose.Schema.Types.ObjectId,
@@ -71,7 +71,9 @@ const productSchema = new mongoose.Schema(
     },
   },
   {
-    timestamps: true, // يقوم بإنشاء createdAt و updatedAt تلقائيًا
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
+    timestamps: true,
   }
 );
 
@@ -85,9 +87,11 @@ productSchema.pre("findOneAndUpdate", function () {
   }
 });
 
-productSchema.pre(/^find/, function () {
-  this.populate({ path: "category", select: "name" });
+productSchema.virtual("reviews", {
+  ref: "Review",
+  foreignField: "product",
+  localField: "_id",
+  //  مودل اسمه ريفيو داخله حقل اسمه برودكت الايدي بتاعه بقا
 });
-
 const Product = mongoose.model("Product", productSchema);
 export default Product;

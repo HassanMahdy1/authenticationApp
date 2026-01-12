@@ -1,10 +1,10 @@
 import AppError from "../../utils/appError.js";
-import { promisify } from 'util';
-import { jwt } from 'jsonwebtoken';
+import { promisify } from "util";
+import jwt from "jsonwebtoken";
 import User from "../../models/userModel.js";
-import { accessToken } from './../../utils/jwt.js';
+import { accessToken } from "./../../utils/jwt.js";
 
-export const refresh = async (req, res, next) => {
+export const refreshTokenController = async (req, res, next) => {
   try {
     // 1) التأكد من وجود الكوكي
     const refreshTokenVal = req.cookies?.refreshToken;

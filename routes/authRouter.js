@@ -6,15 +6,16 @@ import { authLimiter } from '../middlewares/resetLimiterRequest.js';
 import { register } from "../controllers/authController/registerController.js";
 import { login } from "../controllers/authController/loginController.js";
 import { logout } from "../controllers/authController/logout.js";
-import { refreshToken } from "../utils/jwt.js";
+import { refreshTokenController } from './../controllers/authController/refreshTokenController.js';
 
 const router = express.Router();
 router.route("/register").post(register);
 router.route("/login").post(login);
-router.route("/refresh").get(refreshToken);
+router.route("/refresh").get(refreshTokenController);
 router.route("/logout").post(logout);
-router.post("/forgotPassword",authLimiter, forgotPassword);
-router.patch('/resetPassword/:token', resetPassword);
+router.route("/forgotPassword").post(authLimiter,forgotPassword);
+router.route("/resetPassword/:token").patch(resetPassword);
+
 
 
 export default router;

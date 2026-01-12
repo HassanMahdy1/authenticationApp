@@ -5,6 +5,7 @@ import brandRouter from "./brandRouter.js";
 import subCategoryRouter from "./subCategoryRouter.js";
 import userRouter from "./userRouter.js";
 import authRouter from "./authRouter.js";
+import reviewRouter from "./reviewRouter.js";
 
 const router = express.Router();
 
@@ -24,6 +25,7 @@ router.use("/brand", brandRouter);
 router.use("/subCategory", subCategoryRouter);
 router.use("/user", userRouter);
 router.use("/auth", authRouter);
+router.use("/review", reviewRouter);
 
 
 

@@ -21,7 +21,7 @@ const userSchema = new mongoose.Schema(
     photo: { type: String, default: "default.jpg" },
     role: {
       type: String,
-      enum: ["user", "guide", "lead-guide", "admin"],
+      enum: ["user", "admin", "moderator"],
       default: "user",
     },
     password: {
@@ -59,7 +59,9 @@ const userSchema = new mongoose.Schema(
 
 // 1) تشفير الباسورد: في Mongoose الحديثة، الـ async hook ينتهي بمجرد اكتمال الـ Promise
 userSchema.pre("save", async function () {
-  if (!this.isModified("password")) return;
+  if (!this.isModified("password")) {
+    return;
+  }
 
   // التشفير باستخدام bcrypt
   this.password = await bcrypt.hash(this.password, 12);
@@ -69,7 +71,9 @@ userSchema.pre("save", async function () {
 });
 
 userSchema.pre("save", function () {
-  if (!this.isModified("password") || this.isNew) return;
+  if (!this.isModified("password") || this.isNew) {
+    return;
+  }
 
   this.passwordChangedAt = Date.now() - 1000;
 });
@@ -112,8 +116,6 @@ userSchema.methods.createPasswordResetToken = function () {
   return resetToken;
 };
 
-
-
 // ميثود للتحقق من صحة الـ Refresh Token عند التجديد
 userSchema.methods.correctRefreshToken = async function (
   candidateToken,
@@ -121,32 +123,6 @@ userSchema.methods.correctRefreshToken = async function (
 ) {
   return await bcrypt.compare(candidateToken, hashedToken);
 };
-
-
-
-
-
-
-userSchema.methods.createPasswordResetToken = function() {
-  // 1) توليد توكين عشوائي بسيط (Plain text)
-  const resetToken = crypto.randomBytes(32).toString('hex');
-  
-  // 2) تشفير التوكين وتخزينه في القاعدة (للحماية)
-  this.passwordResetToken = crypto
-  .createHash('sha256')
-  .update(resetToken)
-  .digest('hex');
-  
-  // 3) تحديد صلاحية التوكين (10 دقائق)
-  this.passwordResetExpires = Date.now() + 10 * 60 * 1000;
-  
-  return resetToken; // نرسل النسخة غير المشفرة للإيميل
-};
-
-
-
-
-
 
 const User = mongoose.model("User", userSchema);
 export default User;

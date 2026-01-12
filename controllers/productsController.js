@@ -19,13 +19,27 @@ export const createProduct = createOne(Product, [
   "discount",
   "isAvailable",
   "subCategory",
-  "category"
+  "category",
+  "brand"
 ]);
 
-export const getProduct = getOne(Product, {
-  path: "category",
-  select: "name",
-});
+export const getProduct = getOne(Product, [
+  {
+    path: "category",
+    select: "name",
+  },
+  {
+    path: "subCategory",
+    select: "name",
+  },
+  {
+    path: "brand",
+    select: "name",
+  },
+  {
+    path: "reviews",
+  },
+]);
 export const updateProduct = updateOne(Product, [
   "name",
   "price",

@@ -10,7 +10,6 @@ import {
 export const getAllBrand = getAll(Brand);
 export const getBrand = getOne(Brand, {
   path: "products",
-  select: "-category",
 });
 
 export const createBrand = createOne(Brand, ["name", "logo"]);

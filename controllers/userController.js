@@ -7,9 +7,7 @@ import {
 } from "./handlerFactory.js";
 
 export const getAllUser = getAll(User);
-export const getUser = getOne(User, {
-  path: "products",
-});
+export const getUser = getOne(User);
 
 
 export const updateUser = updateOne(User);

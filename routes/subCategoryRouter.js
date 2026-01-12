@@ -13,7 +13,7 @@ const router = express.Router();
 router.route("/").get(getAllSubCategory);
 router.route("/:id").get(getSubCategory);
 
- router.use(verifyJWT, restrictTo("guide", "lead-guide", "admin"))
+ router.use(verifyJWT, restrictTo( "admin", "moderator"))
 
 router.route("/").post(createSubCategory);
 router.route("/:id").patch(updateSubCategory).delete(deleteSubCategory);
